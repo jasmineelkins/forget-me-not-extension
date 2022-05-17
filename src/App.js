@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import popupFunction from "./popup";
 
 function App() {
+  useEffect(() => {
+    console.log("Popup opened");
+  }, []);
+
+  function handleClick() {
+    console.log("Button clicked");
+
+    popupFunction();
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="popupContainer">
+        <h1>Save URL</h1>
+        <button id="addBtn" onClick={handleClick}>
+          Add to my list
+        </button>
+      </div>
     </div>
   );
 }
