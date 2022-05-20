@@ -62,19 +62,25 @@ function App() {
         </header>
 
         {loggedInUser ? (
-          <h2>Hi, {loggedInUser.name}</h2>
+          <div className="innerContainer">
+            <h2>Hi, {loggedInUser.name}</h2>
+
+            <div class="imageContainer">
+              <button id="addBtn" onClick={handleClick}>
+                Add to Weekly Newsletter
+              </button>
+              {/* <div className="">
+              <label>Custom date:</label>
+              <input></input>
+            </div>  */}
+            </div>
+          </div>
         ) : (
-          <h2>Hi! Please log in.</h2>
+          <div className="innerContainer">
+            <h2>Hi there!</h2>
+            <span>Please follow the link to log in.</span>
+          </div>
         )}
-
-        <button id="addBtn" onClick={handleClick}>
-          Add to Weekly Newsletter
-        </button>
-
-        {/* <div className="">
-          <label>Custom date:</label>
-          <input></input>
-        </div> */}
 
         <a href="http://localhost:4000" target="_blank" rel="noreferrer">
           forgetmenot.app
