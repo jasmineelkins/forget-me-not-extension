@@ -1,0 +1,9 @@
+make --dry-run --always-make --keep-going --print-directory
+
+	--- Run this command to prepare the build for upload ---
+	make build
+
+make: Entering directory `/Users/jelkins/Desktop/GitHub-Repos/forget-me-not-extension'
+exit 0
+make: Leaving directory `/Users/jelkins/Desktop/GitHub-Repos/forget-me-not-extension'
+ 

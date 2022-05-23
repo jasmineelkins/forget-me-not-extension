@@ -5,6 +5,7 @@ import usePopupFunction from "./usePopupFunction";
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [currentTabURL, setCurrentTabURL] = useState("");
+  const [readByDate, setReadByDate] = useState();
 
   useEffect(() => {
     console.log("Popup opened");
@@ -31,6 +32,18 @@ function App() {
         })
         .catch((error) => console.log(error.message));
     });
+
+    // default, set read-by date to end of current week:
+    const today = new Date();
+    const firstDay = new Date(today.setDate(today.getDate() - today.getDay()));
+    const lastDay = new Date(
+      today.setDate(today.getDate() - today.getDay() + 6)
+    );
+
+    console.log("Start of the week: ", firstDay);
+    console.log("End of the week: ", lastDay);
+
+    setReadByDate(lastDay);
   }, []);
 
   function handleClick() {
@@ -47,6 +60,7 @@ function App() {
         url: currentTabURL,
         user_id: loggedInUser.id,
         newsletter_id: 1,
+        read_by_date: readByDate,
       }),
     })
       .then((res) => res.json())
