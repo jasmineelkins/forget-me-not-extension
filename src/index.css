@@ -1,19 +1,31 @@
 /* FONTS & COLORS ---------------------------------------------------------- */
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@200;400&family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Aclonica&family=Actor&display=swap"); /* GENERAL --------------------------------------------------------- */
-body {
-  margin: 0;
-  font-family: "Jost", Verdana, sans-serif;
-  font-family: "Actor", Courier, sans-serif;
 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --dark-text: #110f61;
+  --medium-text: #333670;
+  --light-text: #ffffff;
+
+  --main-background: #c3d3e5;
+  --light-background: #e2e7f4;
+  --dark-background: #686ba6;
+  --medium-background: #707eaf;
+
+  --button-background: #acb9da;
+  --button-border: #333670;
+
+  --header-background: #686ba6;
+
+  --main-font: "Actor", Verdana, sans-serif;
+  --fancy-font: "Aclonica", Verdana, sans-serif;
 }
 
 /* GENERAL ---------------------------------------------------------- */
 body {
-  font-family: "Actor", Courier, sans-serif;
-  background: #c3d3e5;
+  font-family: var(--main-font);
+  background: var(--main-background);
+  margin: 0;
 }
 
 /* Popup */
@@ -22,10 +34,10 @@ body {
   width: 300px;
   height: 360px;
   margin: 0;
-  background: #c3d3e5;
-  border: 3px solid #707eaf;
+  background: var(--main-background);
+  border: 3px solid var(--medium-background);
   /* border-radius: 25px; */
-  color: #110f61;
+  color: var(--dark-text);
 }
 
 .innerContainer {
@@ -53,12 +65,12 @@ body {
 header {
   padding: 0;
   margin: 0;
-  font-family: "Aclonica";
-  color: #110f61;
+  font-family: var(--fancy-font);
+  color: var(--dark-text);
   width: 100%;
   height: 70px;
   /* text-align: center; */
-  background: #686ba6;
+  background: var(--dark-background);
   /* border-radius: 15px 15px 0px 0px; */
   display: flex;
   align-items: center;
@@ -66,24 +78,24 @@ header {
 }
 
 h2 {
-  font-family: "Aclonica";
+  font-family: var(--fancy-font);
   font-size: 14px;
   text-align: center;
 }
 
 /* Form Button */
 #addBtn {
-  font-family: "Actor", Courier, sans-serif;
+  font-family: var(--main-font);
   border-radius: 10px;
   font-size: 14px;
   text-align: center;
   padding: 10px 20px;
   width: 160px;
   height: 55px;
-  background: #e2e7f4;
-  border: 1px solid #686ba6;
+  background: var(--light-background);
+  border: 1px solid var(--dark-background);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  color: #110f61;
+  color: var(--dark-text);
   margin: 15px;
   margin-bottom: 55px;
 }
@@ -99,11 +111,81 @@ h2 {
 /* App link */
 a {
   display: block;
-  font-family: "Actor";
-  color: #110f61;
+  font-family: var(--main-font);
+  color: var(--dark-text);
   font-style: normal;
   font-weight: 400;
   font-size: 10px;
   text-align: center;
   text-decoration-line: underline;
 }
+
+/* AUTHBAR ------------------------------------------------------------ */
+.authFormContainer {
+  display: flex;
+  justify-content: center;
+  margin: 3em;
+}
+
+.authForm {
+  background-color: var(--medium-background);
+  color: var(--light-text);
+  width: 25vw;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  justify-content: center;
+  gap: 5px;
+  padding: 3em;
+  border-radius: 25px;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.formRow label {
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.formRow input {
+  padding: 0.5em;
+  margin-top: 5px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+}
+
+.errorMessage {
+  color: tomato;
+  font-style: italic;
+  font-weight: normal;
+  font-size: smaller;
+  text-align: center;
+}
+
+.formButtonDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formButtonDiv button {
+  font-weight: bold;
+}
+
+/* .authBarContainer a {
+  text-decoration: none;
+  color: var(--dark-text);
+} */
+
+/* .authBarContainer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+} */
+
+/* .authBarContainer a:visited {
+  color: #333;
+} */

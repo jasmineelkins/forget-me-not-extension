@@ -1,6 +1,7 @@
 import userEvent from "@testing-library/user-event";
 import React, { useState, useEffect } from "react";
 import usePopupFunction from "./usePopupFunction";
+import Login from "./Login";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -91,8 +92,12 @@ function App() {
           </div>
         ) : (
           <div className="innerContainer">
-            <h2>Hi there!</h2>
-            <span>Please follow the link to log in.</span>
+            {/* <h2>Hi there!</h2>
+            <span>Please follow the link to log in.</span> */}
+            <Login
+              loggedInUser={loggedInUser}
+              setLoggedInUser={setLoggedInUser}
+            />
           </div>
         )}
 
