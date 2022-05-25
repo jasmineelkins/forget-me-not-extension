@@ -1,12 +1,14 @@
 import userEvent from "@testing-library/user-event";
 import React, { useState, useEffect } from "react";
-import usePopupFunction from "./usePopupFunction";
+import { MdOpenInNew } from "react-icons/md";
+
 import Login from "./Login";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [currentTabURL, setCurrentTabURL] = useState("");
-  const [readByDate, setReadByDate] = useState();
+  const [weeklyReadByDate, setWeeklyReadByDate] = useState();
+  const [monthlyReadByDate, setMonthlyReadByDate] = useState();
 
   useEffect(() => {
     console.log("Popup opened");
@@ -36,19 +38,32 @@ function App() {
 
     // default, set read-by date to end of current week:
     const today = new Date();
-    const firstDay = new Date(today.setDate(today.getDate() - today.getDay()));
-    const lastDay = new Date(
+    const firstDayOfWeek = new Date(
+      today.setDate(today.getDate() - today.getDay())
+    );
+    const lastDayOfWeek = new Date(
       today.setDate(today.getDate() - today.getDay() + 6)
     );
 
-    console.log("Start of the week: ", firstDay);
-    console.log("End of the week: ", lastDay);
+    console.log("Start of the week: ", firstDayOfWeek);
+    console.log("End of the week: ", lastDayOfWeek);
 
-    setReadByDate(lastDay);
+    setWeeklyReadByDate(lastDayOfWeek);
+
+    // configure end of monthly date, use only if monthly button clicked
+    const lastDayOfMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0
+    );
+
+    console.log("Last day of the month: ", lastDayOfMonth);
+
+    setMonthlyReadByDate(lastDayOfMonth);
   }, []);
 
-  function handleClick() {
-    console.log("Button clicked");
+  function handleWeeklyClick() {
+    console.log("Button clicked - weekly");
 
     // POST create new Article with url and user_id
     fetch(`http://localhost:3000/articles`, {
@@ -61,7 +76,29 @@ function App() {
         url: currentTabURL,
         user_id: loggedInUser.id,
         newsletter_id: 1,
-        read_by_date: readByDate,
+        read_by_date: weeklyReadByDate,
+      }),
+    })
+      .then((res) => res.json())
+      .then((newArticlObj) => console.log("Article created: ", newArticlObj))
+      .catch((error) => console.log(error.message));
+  }
+
+  function handleMonthlyClick() {
+    console.log("Button clicked - monthly");
+
+    // POST create new Article with url and user_id **MONTHLY READ-BY DATE**
+    fetch(`http://localhost:3000/articles`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        url: currentTabURL,
+        user_id: loggedInUser.id,
+        newsletter_id: 1,
+        read_by_date: monthlyReadByDate,
       }),
     })
       .then((res) => res.json())
@@ -81,19 +118,16 @@ function App() {
             <h2>Hi, {loggedInUser.name}</h2>
 
             <div class="imageContainer">
-              <button id="addBtn" onClick={handleClick}>
+              <button className="addBtn" onClick={handleWeeklyClick}>
                 Add to Weekly Newsletter
               </button>
-              {/* <div className="">
-              <label>Custom date:</label>
-              <input></input>
-            </div>  */}
+              <button className="addBtn" onClick={handleMonthlyClick}>
+                Add to Monthly Newsletter
+              </button>
             </div>
           </div>
         ) : (
           <div className="innerContainer">
-            {/* <h2>Hi there!</h2>
-            <span>Please follow the link to log in.</span> */}
             <Login
               loggedInUser={loggedInUser}
               setLoggedInUser={setLoggedInUser}
@@ -101,8 +135,13 @@ function App() {
           </div>
         )}
 
-        <a href="http://localhost:4000" target="_blank" rel="noreferrer">
-          forgetmenot.app
+        <a
+          href="http://localhost:4000"
+          target="_blank"
+          rel="noreferrer"
+          className="appLink"
+        >
+          forgetmenot.app <MdOpenInNew />
         </a>
       </div>
     </div>

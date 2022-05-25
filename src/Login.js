@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+
 // import { useNavigate } from "react-router-dom";
 
 const defaultFormState = { username: "", password: "" };
@@ -68,6 +69,7 @@ function Login({ loggedInUser, setLoggedInUser }) {
 
   return (
     <div className="authFormContainer">
+      <h2>Sign In</h2>
       <form onSubmit={(e) => handleSubmit(e)} className="authForm">
         <div className="formRow">
           <label>Username</label>
@@ -93,7 +95,9 @@ function Login({ loggedInUser, setLoggedInUser }) {
           <button onClick={(e) => togglePassword(e)}>
             {passwordShownIcon}
           </button>
-          <button type="submit">Submit</button>
+          <button type="submit" className="submitBtn">
+            Submit
+          </button>
         </div>
 
         <span className="errorMessage">{errorsToDisplay}</span>
