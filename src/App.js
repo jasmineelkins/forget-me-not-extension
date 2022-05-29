@@ -8,8 +8,25 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [currentTabURL, setCurrentTabURL] = useState("");
 
-  const [weeklyReadByDate, setWeeklyReadByDate] = useState();
-  const [monthlyReadByDate, setMonthlyReadByDate] = useState();
+  // determine end of week & month for current day:
+  function determineDates(frequency) {
+    const today = new Date();
+
+    if (frequency === "weekly") {
+      const lastDayOfWeek = new Date(
+        today.setDate(today.getDate() - today.getDay() + 6)
+      );
+      return lastDayOfWeek;
+    } else {
+      const lastDayOfMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        0
+      );
+
+      return lastDayOfMonth;
+    }
+  }
 
   // GET current User from local storage when popup is opened
   async function getCurrentUser() {
@@ -28,36 +45,28 @@ function App() {
   }
 
   // GET or CREATE weekly newsletter for current user
-  async function getOrCreateWeeklyNewsletter() {
+  async function getOrCreateNewsletter(frequency) {
     try {
       const response = await fetch(`/users/${loggedInUser.id}/newsletters`);
       const newslettersArray = await response.json();
 
-      if (newslettersArray.length > 0) {
-        console.log("not empty");
-        const unsentNewsletters = newslettersArray.filter(
-          (nl) => nl.frequency === "weekly" && nl.sent === false
-        );
+      const unsentNewsletters = newslettersArray.filter(
+        (nl) => nl.frequency === frequency && nl.sent === false
+      );
 
-        if (unsentNewsletters.length > 0) {
-          const firstUnsent = unsentNewsletters[0];
-          return firstUnsent;
-        } else {
-          console.log("no unsent weekly nl - create new");
-          return await createNewsletter();
-        }
+      if (unsentNewsletters.length > 0) {
+        const firstUnsent = unsentNewsletters[0];
+        return firstUnsent;
       } else {
-        console.log("empty");
-
-        // create new newsletter
-        return await createNewsletter();
+        console.log(`no unsent ${frequency} nl - create new`);
+        return await createNewsletter(frequency);
       }
     } catch (error) {
       console.log(error.message);
     }
   }
 
-  async function createNewsletter() {
+  async function createNewsletter(frequency) {
     try {
       const response = await fetch(`/newsletters`, {
         method: "POST",
@@ -66,8 +75,8 @@ function App() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          frequency: "weekly",
-          publish_date: weeklyReadByDate,
+          frequency: frequency,
+          publish_date: determineDates(frequency),
           user_id: loggedInUser.id,
           sent: false,
         }),
@@ -80,11 +89,11 @@ function App() {
     }
   }
 
-  async function createArticle() {
+  async function createArticle(frequency) {
     try {
-      const targetNewsletter = await getOrCreateWeeklyNewsletter();
+      const targetNewsletter = await getOrCreateNewsletter(frequency);
 
-      console.log(targetNewsletter);
+      console.log("target newsletter: ", targetNewsletter);
 
       const response = await fetch(`/articles`, {
         method: "POST",
@@ -96,7 +105,8 @@ function App() {
           url: currentTabURL,
           user_id: loggedInUser.id,
           newsletter_id: targetNewsletter.id,
-          read_by_date: weeklyReadByDate,
+          send_date: determineDates(frequency),
+          priority: "normal",
         }),
       });
       const articleObj = await response.json();
@@ -123,45 +133,19 @@ function App() {
     setCurrentTabURL(
       "https://medium.com/@satria.uno/why-ruby-on-rails-is-so-good-7e603cb63808"
     );
-
-    // default, set read-by date to end of current week:
-    const today = new Date();
-    // const firstDayOfWeek = new Date(
-    //   today.setDate(today.getDate() - today.getDay())
-    // );
-    const lastDayOfWeek = new Date(
-      today.setDate(today.getDate() - today.getDay() + 6)
-    );
-
-    // console.log("Start of the week: ", firstDayOfWeek);
-    // console.log("End of the week: ", lastDayOfWeek);
-
-    setWeeklyReadByDate(lastDayOfWeek);
-
-    // configure end of monthly date, use only if monthly button clicked
-    const lastDayOfMonth = new Date(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      0
-    );
-
-    // console.log("Last day of the month: ", lastDayOfMonth);
-
-    setMonthlyReadByDate(lastDayOfMonth);
   }, []);
 
   function handleWeeklyClick() {
     console.log("Button clicked - weekly");
 
-    // next add parameter: weekly or monthly
-    createArticle();
+    // createArticle();
+    createArticle("weekly");
   }
 
   function handleMonthlyClick() {
     console.log("Button clicked - monthly");
 
-    // POST create new Article with url and user_id **MONTHLY READ-BY DATE**
-    // createArticle(monthly)
+    createArticle("monthly");
   }
 
   return (
