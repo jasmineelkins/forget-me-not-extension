@@ -11,7 +11,100 @@ function App() {
   const [weeklyReadByDate, setWeeklyReadByDate] = useState();
   const [monthlyReadByDate, setMonthlyReadByDate] = useState();
 
-  const [newsletterID, setNewsletterID] = useState();
+  // GET current User from local storage when popup is opened
+  async function getCurrentUser() {
+    try {
+      const response = await fetch(`/me`);
+      const userObj = await response.json();
+
+      console.log("Current user: ", userObj);
+
+      if (userObj.id) {
+        setLoggedInUser(userObj);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  // GET or CREATE weekly newsletter for current user
+  async function getOrCreateWeeklyNewsletter() {
+    try {
+      const response = await fetch(`/users/${loggedInUser.id}/newsletters`);
+      const newslettersArray = await response.json();
+
+      if (newslettersArray.length > 0) {
+        console.log("not empty");
+        const unsentNewsletters = newslettersArray.filter(
+          (nl) => nl.frequency === "weekly" && nl.sent === false
+        );
+
+        if (unsentNewsletters.length > 0) {
+          const firstUnsent = unsentNewsletters[0];
+          return firstUnsent;
+        } else {
+          console.log("no unsent weekly nl - create new");
+          return await createNewsletter();
+        }
+      } else {
+        console.log("empty");
+
+        // create new newsletter
+        return await createNewsletter();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async function createNewsletter() {
+    try {
+      const response = await fetch(`/newsletters`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          frequency: "weekly",
+          publish_date: weeklyReadByDate,
+          user_id: loggedInUser.id,
+          sent: false,
+        }),
+      });
+      const newsletterObj = await response.json();
+      console.log(newsletterObj);
+      return newsletterObj;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async function createArticle() {
+    try {
+      const targetNewsletter = await getOrCreateWeeklyNewsletter();
+
+      console.log(targetNewsletter);
+
+      const response = await fetch(`/articles`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          url: currentTabURL,
+          user_id: loggedInUser.id,
+          newsletter_id: targetNewsletter.id,
+          read_by_date: weeklyReadByDate,
+        }),
+      });
+      const articleObj = await response.json();
+      console.log(articleObj);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   useEffect(() => {
     // console.log("Popup opened");
@@ -24,25 +117,12 @@ function App() {
     //   console.log(current_url);
     //   setCurrentTabURL(current_url);
 
-    // GET current User from local storage when popup is opened
-    fetch(`/me`)
-      .then((res) => res.json())
-      .then((userObj) => {
-        console.log("Current user: ", userObj);
-
-        if (userObj.id) {
-          console.log("User's name: ", userObj.name);
-
-          setLoggedInUser(userObj);
-        }
-      })
-      .catch((error) => console.log(error.message));
-    // });
-
-    console.log("Window opened");
+    getCurrentUser();
 
     // for now, open in full window with manual URL:
-    setCurrentTabURL("unicorn");
+    setCurrentTabURL(
+      "https://medium.com/@satria.uno/why-ruby-on-rails-is-so-good-7e603cb63808"
+    );
 
     // default, set read-by date to end of current week:
     const today = new Date();
@@ -54,7 +134,7 @@ function App() {
     );
 
     // console.log("Start of the week: ", firstDayOfWeek);
-    console.log("End of the week: ", lastDayOfWeek);
+    // console.log("End of the week: ", lastDayOfWeek);
 
     setWeeklyReadByDate(lastDayOfWeek);
 
@@ -65,7 +145,7 @@ function App() {
       0
     );
 
-    console.log("Last day of the month: ", lastDayOfMonth);
+    // console.log("Last day of the month: ", lastDayOfMonth);
 
     setMonthlyReadByDate(lastDayOfMonth);
   }, []);
@@ -73,111 +153,15 @@ function App() {
   function handleWeeklyClick() {
     console.log("Button clicked - weekly");
 
-    const { id } = loggedInUser;
-
-    // first, check if unsent weekly Newsletter exists
-    fetch(`/users/${id}/newsletters`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((newslettersArray) => {
-        console.log("Newsletter Array: ", newslettersArray); // this is working
-
-        if (newslettersArray > 0) {
-          console.log("not empty");
-          // const unsentNewsletters = newslettersArray.filter(
-          //   (nl) => nl.type === "weekly" && nl.sent === false
-          // );
-          // const firstUnsent = unsentNewsletters[0];
-          // setNewsletterID(firstUnsent.id);
-        } else {
-          console.log("empty");
-          console.log(loggedInUser.id);
-          // create new newsletter
-          // fetch(`http://localhost:3000/newsletters`, {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //     Accept: "application/json",
-          //   },
-          //   body: JSON.stringify({
-          //     type: "weekly",
-          //     publish_date: weeklyReadByDate,
-          //     user_id: loggedInUser.id,
-          //     sent: false,
-          //   }),
-          // })
-          //   .then((res) => res.json())
-          //   .then((newNewsletterObj) => {
-          //     console.log(newNewsletterObj);
-          //     // setNewsletterID(newNewsletterObj.id);
-          //   })
-          //   .catch((error) => console.log(error.message));
-        }
-
-        //  POST create new Article with url and user_id
-        // fetch(`http://localhost:3000/articles`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Accept: "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     url: currentTabURL,
-        //     user_id: loggedInUser.id,
-        //     newsletter_id: newsletterID,
-        //     read_by_date: weeklyReadByDate,
-        //   }),
-        // })
-        //   .then((res) => res.json())
-        //   .then((newArticlObj) =>
-        //     console.log("Article created: ", newArticlObj)
-        //   )
-        //   .catch((error) => console.log(error.message));
-      })
-      .catch((error) => console.log(error.message));
-
-    // if not, create it
-
-    // POST create new Article with url and user_id
-    //   fetch(`http://localhost:3000/articles`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       url: currentTabURL,
-    //       user_id: loggedInUser.id,
-    //       newsletter_id: ,
-    //       read_by_date: weeklyReadByDate,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((newArticlObj) => console.log("Article created: ", newArticlObj))
-    //     .catch((error) => console.log(error.message));
+    // next add parameter: weekly or monthly
+    createArticle();
   }
 
   function handleMonthlyClick() {
     console.log("Button clicked - monthly");
 
     // POST create new Article with url and user_id **MONTHLY READ-BY DATE**
-    // fetch(`http://localhost:3000/articles`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     url: currentTabURL,
-    //     user_id: loggedInUser.id,
-    //     newsletter_id: 1,
-    //     read_by_date: monthlyReadByDate,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((newArticlObj) => console.log("Article created: ", newArticlObj))
-    //   .catch((error) => console.log(error.message));
+    // createArticle(monthly)
   }
 
   return (
