@@ -31,7 +31,7 @@ function Login({ loggedInUser, setLoggedInUser }) {
     e.preventDefault();
 
     // POST request: log in user by creating a session
-    fetch(`http://localhost:3000/login`, {
+    fetch(`/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
