@@ -7,6 +7,27 @@ import Login from "./Login";
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [currentTabURL, setCurrentTabURL] = useState("");
+  const [progressMessage, setProgressMessage] = useState();
+
+  useEffect(() => {
+    console.log("Popup opened");
+
+    /*global chrome*/
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      //get URL of current tab
+      let current_url = tabs[0].url;
+
+      console.log(current_url);
+      setCurrentTabURL(current_url);
+    });
+
+    getCurrentUser();
+
+    // for running in full window with manual URL:
+    // setCurrentTabURL(
+    //   "https://medium.com/@satria.uno/why-ruby-on-rails-is-so-good-7e603cb63808"
+    // );
+  }, []);
 
   // determine end of week & month for current day:
   function determineDates(frequency) {
@@ -90,6 +111,8 @@ function App() {
   }
 
   async function createArticle(frequency) {
+    setProgressMessage("Saving article");
+
     try {
       const targetNewsletter = await getOrCreateNewsletter(frequency);
 
@@ -111,34 +134,18 @@ function App() {
       });
       const articleObj = await response.json();
       console.log(articleObj);
+
+      setProgressMessage("Article saved");
+
+      setTimeout(() => setProgressMessage(), 1000);
     } catch (error) {
       console.log(error.message);
     }
   }
 
-  useEffect(() => {
-    // console.log("Popup opened");
-
-    // /*global chrome*/
-    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    //   //get URL of current tab
-    //   let current_url = tabs[0].url;
-
-    //   console.log(current_url);
-    //   setCurrentTabURL(current_url);
-
-    getCurrentUser();
-
-    // for now, open in full window with manual URL:
-    setCurrentTabURL(
-      "https://medium.com/@satria.uno/why-ruby-on-rails-is-so-good-7e603cb63808"
-    );
-  }, []);
-
   function handleWeeklyClick() {
     console.log("Button clicked - weekly");
 
-    // createArticle();
     createArticle("weekly");
   }
 
@@ -156,7 +163,21 @@ function App() {
         </header>
 
         {loggedInUser ? (
-          <div className="innerContainer">
+          <div className="innerContainer" style={{ position: "relative" }}>
+            <div
+              style={{
+                position: "absolute",
+                zIndex: 100,
+                top: 20,
+                left: 0,
+                right: 0,
+                background: "white",
+                transition: "1s ease all",
+                opacity: progressMessage ? 1 : 0,
+              }}
+            >
+              {progressMessage}
+            </div>
             <h2>Hi, {loggedInUser.name}</h2>
 
             <div className="imageContainer">
