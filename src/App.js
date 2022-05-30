@@ -1,8 +1,8 @@
 import userEvent from "@testing-library/user-event";
 import React, { useState, useEffect } from "react";
 import { MdOpenInNew } from "react-icons/md";
-
 import Login from "./Login";
+import BASE_URL from "./config/constants";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -52,7 +52,7 @@ function App() {
   // GET current User from local storage when popup is opened
   async function getCurrentUser() {
     try {
-      const response = await fetch(`/me`);
+      const response = await fetch(`${BASE_URL}/me`);
       const userObj = await response.json();
 
       console.log("Current user: ", userObj);
@@ -65,10 +65,12 @@ function App() {
     }
   }
 
-  // GET or CREATE weekly newsletter for current user
+  // GET or POST newsletter for current user
   async function getOrCreateNewsletter(frequency) {
     try {
-      const response = await fetch(`/users/${loggedInUser.id}/newsletters`);
+      const response = await fetch(
+        `${BASE_URL}/users/${loggedInUser.id}/newsletters`
+      );
       const newslettersArray = await response.json();
 
       const unsentNewsletters = newslettersArray.filter(
@@ -87,9 +89,10 @@ function App() {
     }
   }
 
+  // POST new newsletter for user
   async function createNewsletter(frequency) {
     try {
-      const response = await fetch(`/newsletters`, {
+      const response = await fetch(`${BASE_URL}/newsletters`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,6 +113,7 @@ function App() {
     }
   }
 
+  // POST new article
   async function createArticle(frequency) {
     setProgressMessage("Saving article");
 
@@ -118,7 +122,7 @@ function App() {
 
       console.log("target newsletter: ", targetNewsletter);
 
-      const response = await fetch(`/articles`, {
+      const response = await fetch(`${BASE_URL}/articles`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
