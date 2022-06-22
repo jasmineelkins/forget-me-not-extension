@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import BASE_URL from "./config/constants";
 
 // import { useNavigate } from "react-router-dom";
 
@@ -31,7 +32,7 @@ function Login({ loggedInUser, setLoggedInUser }) {
     e.preventDefault();
 
     // POST request: log in user by creating a session
-    fetch(`/login`, {
+    fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

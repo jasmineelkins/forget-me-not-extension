@@ -73,6 +73,8 @@ function App() {
       );
       const newslettersArray = await response.json();
 
+      console.log("Newsletters Array; ", newslettersArray);
+
       const unsentNewsletters = newslettersArray.filter(
         (nl) => nl.frequency === frequency && nl.sent === false
       );
@@ -203,12 +205,12 @@ function App() {
         )}
 
         <a
-          href="http://localhost:4000"
+          href="https://jasmineelkins-forget-me-not.herokuapp.com/"
           target="_blank"
           rel="noreferrer"
           className="appLink"
         >
-          forgetmenot.app <MdOpenInNew />
+          forget-me-not.herokuapp.com/ <MdOpenInNew />
         </a>
       </div>
     </div>
