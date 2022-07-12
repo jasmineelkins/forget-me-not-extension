@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Thu Jun  9 15:49:46 2022
+# Make data base, printed on Tue Jul 12 08:28:36 2022
 
 # Variables
 
@@ -27,8 +27,6 @@ define HELP_MESSAGE
 	$ make build
 
 endef
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
@@ -48,11 +46,7 @@ _ = /usr/bin/make
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # environment
-VSCODE_VERBOSE_LOGGING = true
-# environment
 __CFBundleIdentifier = com.microsoft.VSCode
-# environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/s5/y2gw9rmx6t77rmhmhvxn73cr0000gn/T/vscode-ipc-6f7a8278-237c-4bd8-a0ae-a97f4deb5433.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -60,17 +54,13 @@ PATH = /Users/jelkins/.rvm/gems/ruby-2.7.4/bin:/Users/jelkins/.rvm/gems/ruby-2.7
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-VSCODE_LOG_STACK = false
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.ovn0tqh9MH/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.uVBxaL5Vsn/Listeners
 # automatic
 %F = $(notdir $%)
-# environment
-VSCODE_PIPE_LOGGING = true
 # environment
 rvm_bin_path = /Users/jelkins/.rvm/bin
 # environment
@@ -86,7 +76,7 @@ HOME = /Users/jelkins
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/jelkins/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+VSCODE_CODE_CACHE_PATH = /Users/jelkins/Library/Application Support/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
 # environment
 LOGNAME = jelkins
 # environment
@@ -130,7 +120,9 @@ TMPDIR = /var/folders/s5/y2gw9rmx6t77rmhmhvxn73cr0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/jelkins/Library/Application Support/Code/1.67.2-main.sock
+VSCODE_IPC_HOOK = /Users/jelkins/Library/Application Support/Code/1.69.0-main.sock
+# environment
+MallocNanoZone = 0
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -138,7 +130,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.4350889358.4350889364
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.4354319541.4354319547
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -168,11 +160,11 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2791
+VSCODE_PID = 551
 # environment
 MY_RUBY_HOME = /Users/jelkins/.rvm/rubies/ruby-2.7.4
 # variable set hash-table stats:
-# Load=76/1024=7%, Rehash=0, Collisions=3/100=3%
+# Load=72/1024=7%, Rehash=0, Collisions=3/96=3%
 
 # Pattern-specific Variable Values
 
@@ -189,6 +181,7 @@ MY_RUBY_HOME = /Users/jelkins/.rvm/rubies/ruby-2.7.4
 # No implicit rules.
 
 # Files
+ 
 
 # Not a target:
 all:
@@ -272,7 +265,6 @@ help:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
- 
-# Finished Make data base on Thu Jun  9 15:49:46 2022
+# Finished Make data base on Tue Jul 12 08:28:36 2022
 
  

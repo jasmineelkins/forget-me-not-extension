@@ -21,6 +21,23 @@ function App() {
       setCurrentTabURL(current_url);
     });
 
+    // ATTEMPTING TO ACCESS USER COOKIES FOR HEROKU APP - NOT WORKING YET
+    // console.log("Cookies: ", document.cookie);
+
+    // chrome.cookies.get(
+    //   {
+    //     url: "https://jasmineelkins-forget-me-not.herokuapp.com/",
+    //     name: "Forget Me Not",
+    //   },
+    //   function (cookie) {
+    //     if (cookie) {
+    //       console.log("Cookie value: ", cookie.value);
+    //     } else {
+    //       console.log("ERROR: Can't get cookie! Check the name!");
+    //     }
+    //   }
+    // );
+
     getCurrentUser();
 
     // for running in full window with manual URL:
@@ -117,7 +134,7 @@ function App() {
 
   // POST new article
   async function createArticle(frequency) {
-    setProgressMessage("Saving article");
+    setProgressMessage(`Saving article to ${frequency} newsletter`);
 
     try {
       const targetNewsletter = await getOrCreateNewsletter(frequency);
